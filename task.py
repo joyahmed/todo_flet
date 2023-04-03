@@ -1,14 +1,17 @@
 from flet import Checkbox, Column, IconButton, Row, TextField, UserControl, colors, icons
 
-
 class Task(UserControl):
-    def __init__(self, task_name, task_delete):
+    def __init__(self, task_name, task_status_change, task_delete):
         super().__init__()
+        self.completed = False
         self.task_name = task_name
+        self.task_status_change = task_status_change
         self.task_delete = task_delete
 
     def build(self):
-        self.display_task = Checkbox(value=False, label=self.task_name)
+        self.display_task = Checkbox(
+            value=False, label=self.task_name, on_change=self.status_changed
+        )
         self.edit_name = TextField(expand=1)
 
         self.display_view = Row(
@@ -61,6 +64,10 @@ class Task(UserControl):
         self.display_view.visible = True
         self.edit_view.visible = False
         self.update()
+
+    def status_changed(self, e):
+        self.completed = self.display_task.value
+        self.task_status_change(self)
 
     def delete_clicked(self, e):
         self.task_delete(self)
