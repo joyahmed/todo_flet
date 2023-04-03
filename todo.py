@@ -1,38 +1,44 @@
-import flet as ft
+import flet
+from flet import (
+    Checkbox,
+    Column,
+    FloatingActionButton,
+    IconButton,
+    Page,
+    Row,
+    TextField,
+    UserControl,
+    colors,
+    icons,
+)
+from task import Task
 
-class TodoApp(ft.UserControl):
+
+class TodoApp(UserControl):
     def build(self):
-        self.new_task = ft.TextField(hint_text='What needs to be done?', expand=True)
-        self.tasks = ft.Column()
+        self.new_task = TextField(hint_text="What needs to be done?", expand=True)
+        self.tasks = Column()
 
-        # application's root contro (i.e. 'view') containing all other controls
-        return ft.Column(
+        # application's root control (i.e. "view") containing all other controls
+        return Column(
             width=600,
             controls=[
-                ft.Row(
+                Row(
                     controls=[
                         self.new_task,
-                        ft.FloatingActionButton(icon=ft.icons.ADD, on_click=self.add_clicked),
-                    ]
+                        FloatingActionButton(icon=icons.ADD, on_click=self.add_clicked),
+                    ],
                 ),
                 self.tasks,
-            ]
+            ],
         )
 
     def add_clicked(self, e):
-        self.tasks.controls.append(ft.Checkbox(label=self.new_task.value))
-        self.new_task.value = ''
+        task = Task(self.new_task.value, self.task_delete)
+        self.tasks.controls.append(task)
+        self.new_task.value = ""
         self.update()
 
-def main(page: ft.Page):
-    page.title = 'Todo App'
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.update()
-
-    # create application instance
-    todo = TodoApp()
-
-    # add applicatin's root control to the page
-    page.add(todo)
-
-ft.app(target=main)
+    def task_delete(self, task):
+        self.tasks.controls.remove(task)
+        self.update()

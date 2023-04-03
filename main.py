@@ -1,12 +1,17 @@
-import flet as ft
+from flet import Page, flet
 from todo import TodoApp
 
-def main(page: ft.Page):
+
+def main(page: Page):
+    page.title = "ToDo App"
+    page.horizontal_alignment = "center"
+    page.update()
+
     # create application instance
-    app1 = TodoApp()
-    app2 = TodoApp()
+    app = TodoApp()
 
-# add application's root control to the page
-    page.add(app1, app2)
+    # add application's root control to the page
+    page.add(app)
 
-ft.app(target=main)
+
+flet.app(target=main)
